@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none"
+           android:id="@+id/group_function">
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/account"
+            android:title="个人中心"/>
+        <item
+            android:id="@+id/nav_chatting"
+            android:icon="@drawable/chatting"
+            android:title="私信"/>
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/notification"
+            android:title="通知"/>
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@drawable/friends"
+            android:title="好友"/>
+
+    </group>
+    <group
+        android:checkableBehavior="none"
+        android:id="@+id/group_settings">
+    <item android:id="@+id/nav_theme"
+        android:title="主题风格"/>
+    <item android:id="@+id/nav_night"
+        android:title="夜间模式"/>
+    <item android:id="@+id/nav_setting"
+        android:title="设置"/>
+    <item android:id="@+id/nav_suggestion"
+        android:title="意见反馈"/>
+    <item android:id="@+id/nav_about"
+        android:title="关于"/>
+    </group>
+
+</menu>
