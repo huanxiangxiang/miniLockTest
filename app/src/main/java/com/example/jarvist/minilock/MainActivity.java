@@ -36,7 +36,6 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
-        Bmob.initialize(getApplicationContext(),"a1cac56863b317f0ae1d94e59b969869");
+
         setContentView(R.layout.activity_main);
         mapView = (MapView)findViewById(R.id.bmapView);
         mBaiduMap = mapView.getMap();
@@ -228,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
@@ -243,6 +242,6 @@ public class MainActivity extends AppCompatActivity {
         else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
+    }*/
 
 }
