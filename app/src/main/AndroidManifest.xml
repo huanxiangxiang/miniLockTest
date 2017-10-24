@@ -45,7 +45,8 @@
             android:process=":remote" />
 
         <activity android:name=".BaseActivity" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".showActivity"></activity>
     </application>
 
 </manifest>
