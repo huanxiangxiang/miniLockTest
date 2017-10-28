@@ -46,7 +46,8 @@
 
         <activity android:name=".BaseActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".showActivity"></activity>
+        <activity android:name=".showActivity" />
+        <activity android:name=".launchActivity"></activity>
     </application>
 
 </manifest>

@@ -36,8 +36,6 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
-
 public class MainActivity extends AppCompatActivity {
 
     private MapView mapView;
@@ -52,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
-        Bmob.initialize(getApplicationContext(),"a1cac56863b317f0ae1d94e59b969869");
         setContentView(R.layout.activity_main);
         mapView = (MapView)findViewById(R.id.bmapView);
         mBaiduMap = mapView.getMap();
@@ -74,7 +71,14 @@ public class MainActivity extends AppCompatActivity {
         nav_View.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                mDrawerLayout.closeDrawers();
+                switch (item.getItemId()){
+                    case R.id.nav_account:
+                        Toast.makeText(MainActivity.this,"nav_account",Toast.LENGTH_SHORT);
+                        break;
+                    default:
+                        mDrawerLayout.closeDrawers();
+                        break;
+                }
                 return false;
             }
         });
@@ -88,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
                         .setCameraId(0)//前置或后置摄像头
                         .setBeepEnabled(false)//扫码提示音，默认开启
                         .initiateScan();
+
+
             }
         });
 
@@ -165,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
@@ -227,22 +235,19 @@ public class MainActivity extends AppCompatActivity {
             default:break;
         }
     }
-
     @Override
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(MainActivity.this,"无结果", Toast.LENGTH_SHORT).show();
-            } else {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                intent.putExtra("data",result.getContents());
-                startActivity(intent);
-            }
-        }
-        else {
+            Intent intent = new Intent (MainActivity.this,showActivity.class);
+            intent.putExtra("data",result.getContents());
+            startActivity(intent);
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
+
 
 }
