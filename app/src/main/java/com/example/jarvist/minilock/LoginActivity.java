@@ -19,6 +19,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordText;
     private Button loginBtn;
     private Button forgetBtn;
+    private String account;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +31,13 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn = (Button)findViewById(R.id.loginBtn);
         forgetBtn = (Button)findViewById(R.id.forgetBtn);
 
-        final String account = accountText.getText().toString();
-        final String password = passwordText.getText().toString();
+
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                account = accountText.getText().toString();
+                password = passwordText.getText().toString();
                 AVUser.logInInBackground(account, password, new LogInCallback<AVUser>() {
                     @Override
                     public void done(AVUser avUser, AVException e) {

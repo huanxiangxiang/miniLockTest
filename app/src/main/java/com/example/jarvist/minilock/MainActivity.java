@@ -17,9 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextClock;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -44,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView nav_View;
     private FloatingActionButton fab;
     private BaiduMap mBaiduMap;
+    private TextView nickName;
+    private TextView email;
+    private View nav_headerLayout;
+
+    private String currentUserName ;
+    private String currentEmail ;
     private boolean isFirstLocate = true;
     public LocationClient mLocationClient = null;
     public BDAbstractLocationListener myListener = new MyLocationListener();
@@ -51,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
-
         setContentView(R.layout.activity_main);
         mapView = (MapView)findViewById(R.id.bmapView);
         mBaiduMap = mapView.getMap();
@@ -61,10 +69,14 @@ public class MainActivity extends AppCompatActivity {
         mBaiduMap.setMyLocationEnabled(true);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         nav_View = (NavigationView)findViewById(R.id.nav_view);
+        nav_headerLayout = nav_View.inflateHeaderView(R.layout.nav_header);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBar actionBar = getSupportActionBar();
         fab = (FloatingActionButton)findViewById(R.id.fab);
+        nickName = (TextView)nav_headerLayout.findViewById(R.id.nickname);
+        email = (TextView)nav_headerLayout.findViewById(R.id.mail);
+
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
@@ -77,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_account:
                         Toast.makeText(MainActivity.this,"nav_account",Toast.LENGTH_SHORT);
                         break;
+                    case R.id.nav_logOut:
+                        AVUser.logOut();// 清除缓存用户对象
+                        AVUser currentUser = AVUser.getCurrentUser();
+                        Intent intent = new Intent(MainActivity.this,launchActivity.class);
+                        startActivity(intent);
+                        MainActivity.this.finish();
+                        break;// 现在的 currentUser 是 null 了
                     default:
                         mDrawerLayout.closeDrawers();
                         break;
@@ -195,6 +214,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume(){
+
+        AVUser currentUser = AVUser.getCurrentUser();
+        if (currentUser != null) {
+            currentUserName = AVUser.getCurrentUser().getUsername();
+            currentEmail = AVUser.getCurrentUser().getEmail();
+            nickName.setText(currentUserName);
+            email.setText(currentEmail);
+        }
+
         super.onResume();
         mapView.onResume();
     }
@@ -244,151 +272,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent (MainActivity.this,showActivity.class);
             intent.putExtra("data",result.getContents());
             startActivity(intent);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);

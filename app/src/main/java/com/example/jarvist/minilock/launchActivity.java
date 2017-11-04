@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.Button;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
 
 public class launchActivity extends AppCompatActivity {
 
     private Button registerBtn;
     private Button loginBtn;
+    private String currentUserName;
+    private String currentUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +24,14 @@ public class launchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launch);
         registerBtn = (Button)findViewById(R.id.registerBtn);
         loginBtn = (Button)findViewById(R.id.loginBtn);
-
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent  = new Intent(launchActivity.this,RegisterActivity.class);
                 startActivity(intent);
                 launchActivity.this.finish();
+
+
             }
         });
 
@@ -41,5 +45,25 @@ public class launchActivity extends AppCompatActivity {
         });
 
 
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        AVUser currentUser = AVUser.getCurrentUser();
+        if (currentUser != null) {
+            // 跳转到首页
+            Intent intent = new Intent(launchActivity.this,MainActivity.class);
+            currentUserEmail = AVUser.getCurrentUser().getUsername();
+            currentUserEmail = AVUser.getCurrentUser().getEmail();
+            Bundle bundle = new Bundle();
+            bundle.putString("currentUserName",currentUserName);
+            bundle.putString("currentUserEmail",currentUserEmail);
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+
+        }
     }
 }

@@ -58,24 +58,11 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this,"注册成功……即将跳转到主页面",Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Toast.makeText(RegisterActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
                         }
                     }
                 });
 
-                AVUser.requestEmailVerifyInBackground(email,new RequestEmailVerifyCallback(){
-
-                    @Override
-                    public void done(AVException e){
-                        if(e == null){
-                            Toast.makeText(RegisterActivity.this,"发送邮件成功，请前往邮箱进行激活",Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(RegisterActivity.this,"邮件发送失败，请点击重新发送邮件",Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
             }
         });
 

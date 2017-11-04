@@ -34,7 +34,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
@@ -49,7 +49,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".showActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".forgetPswActivity"></activity>
+        <activity android:name=".forgetPswActivity" />
+        <activity android:name=".PersonalActivity"></activity>
     </application>
 
 </manifest>
