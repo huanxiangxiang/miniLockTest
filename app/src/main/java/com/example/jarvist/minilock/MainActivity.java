@@ -3,6 +3,7 @@ package com.example.jarvist.minilock;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVUser;
 import com.baidu.location.BDAbstractLocationListener;
@@ -34,19 +36,33 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static String SITE_URL = "api.mediatek.com/mcs/v2/devices/";
     private MapView mapView;
     private DrawerLayout mDrawerLayout;
     private NavigationView nav_View;
@@ -108,20 +124,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"fab clicked",Toast.LENGTH_SHORT).show();
-                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-                integrator.setOrientationLocked(false)//设置扫码的方向
-                        .setPrompt("将条码放置于框内")//设置下方提示文字
-                        .setCameraId(0)//前置或后置摄像头
-                        .setBeepEnabled(false)//扫码提示音，默认开启
-                        .initiateScan();
-
-
-            }
-        });
 
         List<String> permissionList = new ArrayList<>();
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
@@ -140,6 +142,23 @@ public class MainActivity extends AppCompatActivity {
         else{
             requestLocation();
         }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"fab clicked",Toast.LENGTH_SHORT).show();
+                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                integrator.setOrientationLocked(false)//设置扫码的方向
+                        .setPrompt("将条码放置于框内")//设置下方提示文字
+                        .setCameraId(0)//前置或后置摄像头
+                        .setBeepEnabled(false)//扫码提示音，默认开启
+                        .initiateScan();
+
+
+            }
+        });
+
+
     }
 
     public class MyLocationListener extends BDAbstractLocationListener{
@@ -271,28 +290,75 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-           /* private void sendRequest{
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        //if (result != null) {
+
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        OkHttpClient client = new OkHttpClient();
-                        Request request = new Request.Builder().url()
+                       String path = "https://api.mediatek.com/mcs/v2/devices/DckZ7P05/datapoints.csv";
+                        try{
+                            URL url = new URL(path);
+                            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                            connection.setConnectTimeout(5000);
+                            connection.setRequestMethod("POST");
+                            String upload = "lock_status,,1";
+                            Integer length = upload.length();
+                            connection.setRequestProperty("deviceKey","92FFNVfP7ZnAWDqJ");
+                            connection.setRequestProperty("Content-Type","text/csv");
+                            connection.setRequestProperty("Content-Length",length.toString());
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
-                })
-            }*/
+                });
+                thread.start();
+    }
 
 
 
-            Intent intent = new Intent (MainActivity.this,showActivity.class);
+            /*Intent intent = new Intent (MainActivity.this,showActivity.class);
             intent.putExtra("data",result.getContents());
-            startActivity(intent);
+            startActivity(intent);*/
 
-        } else {
+     /*   else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }*/
+
+    Bitmap encode(String str){
+        Bitmap bitmap = null;
+        BitMatrix result;
+        result = null;
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            result = multiFormatWriter.encode(str, BarcodeFormat.QR_CODE, 200, 200);
+            // 使用 ZXing Android Embedded 要写的代码
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            bitmap = barcodeEncoder.createBitmap(result);
+        } catch (WriterException e){
+            e.printStackTrace();
+        } catch (IllegalArgumentException iae){ // ?
+            return null;
+        }
+
+        // 如果不使用 ZXing Android Embedded 的话，要写的代码
+
+//        int w = result.getWidth();
+//        int h = result.getHeight();
+//        int[] pixels = new int[w * h];
+//        for (int y = 0; y < h; y++) {
+//            int offset = y * w;
+//            for (int x = 0; x < w; x++) {
+//                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+//            }
+//        }
+//        bitmap = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);
+//        bitmap.setPixels(pixels,0,100,0,0,w,h);
+
+        return bitmap;
     }
 
 
