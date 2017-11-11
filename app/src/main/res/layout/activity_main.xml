@@ -17,14 +17,7 @@ android:layout_height="match_parent">
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:id="@+id/toolbar"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light"
-            app:layout_scrollFlags="scroll|enterAlways|snap"/>
+       <include layout="@layout/toolbar_layout"/>
     </android.support.design.widget.AppBarLayout>
 
     <com.baidu.mapapi.map.MapView
@@ -57,8 +50,7 @@ android:layout_height="match_parent">
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:layout_gravity="start"
-    app:menu="@menu/nav_menu"
-    app:headerLayout="@layout/nav_header">
+    app:menu="@menu/nav_menu">
 
 </android.support.design.widget.NavigationView>
 

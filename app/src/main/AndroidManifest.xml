@@ -25,15 +25,16 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="Gl7Gnpq3KDaDBrmNqNbXjuQRs1WWrEtX" />
 
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".launchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
@@ -45,6 +46,14 @@
             android:process=":remote" />
 
 
+
+
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".showActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".forgetPswActivity" />
+        <activity android:name=".PersonalActivity"></activity>
+>>>>>>> dev
     </application>
 
 </manifest>

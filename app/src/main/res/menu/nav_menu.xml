@@ -14,10 +14,7 @@
             android:id="@+id/nav_notification"
             android:icon="@drawable/notification"
             android:title="通知"/>
-        <item
-            android:id="@+id/nav_friends"
-            android:icon="@drawable/friends"
-            android:title="好友"/>
+
 
     </group>
     <group
@@ -33,6 +30,8 @@
         android:title="意见反馈"/>
     <item android:id="@+id/nav_about"
         android:title="关于"/>
+    <item android:id="@+id/nav_logOut"
+            android:title="退出登录"/>
     </group>
 
 </menu>
