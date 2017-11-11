@@ -17,9 +17,8 @@ public class showActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
         editText = (EditText)findViewById(R.id.scanResult);
         Intent intent = getIntent();
-        String s = intent.getStringExtra("data");
-        editText.setText(s);
-        editText.setSelection(s.length());
+        String deviceID = intent.getStringExtra("data");
+
     }
 
 
