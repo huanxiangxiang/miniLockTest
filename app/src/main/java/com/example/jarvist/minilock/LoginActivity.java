@@ -1,9 +1,11 @@
 package com.example.jarvist.minilock;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Toolbar toolBar=(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolBar);
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back_button);
+        }
         accountText = (EditText)findViewById(R.id.editAccount);
         passwordText = (EditText)findViewById(R.id.editPassword);
         loginBtn = (Button)findViewById(R.id.loginBtn);
@@ -38,6 +47,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 account = accountText.getText().toString();
                 password = passwordText.getText().toString();
+                if(account==null||account.isEmpty())
+                {
+                    Toast.makeText(LoginActivity.this, "请输入用户名",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 AVUser.logInInBackground(account, password, new LogInCallback<AVUser>() {
                     @Override
                     public void done(AVUser avUser, AVException e) {
@@ -65,5 +79,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                Intent intent=new Intent(LoginActivity.this,launchActivity.class);
+                startActivity(intent);
+                LoginActivity.this.finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

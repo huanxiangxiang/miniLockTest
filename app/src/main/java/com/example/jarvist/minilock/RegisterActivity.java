@@ -2,8 +2,11 @@ package com.example.jarvist.minilock;
 
 import android.content.Intent;
 import android.graphics.Paint;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestEmailVerifyCallback;
 import com.avos.avoscloud.SignUpCallback;
@@ -31,6 +33,13 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        Toolbar toolBar=(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolBar);
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back_button);
+        }
         numberText = (EditText)findViewById(R.id.editnum);
         mailText = (EditText)findViewById(R.id.mail) ;
         passwordText = (EditText)findViewById(R.id.password);
@@ -84,6 +93,21 @@ public class RegisterActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                Intent intent=new Intent(RegisterActivity.this,launchActivity.class);
+                startActivity(intent);
+                RegisterActivity.this.finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

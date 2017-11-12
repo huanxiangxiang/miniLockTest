@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.jarvist.minilock">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -21,6 +22,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.cameraalbumtest.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="Gl7Gnpq3KDaDBrmNqNbXjuQRs1WWrEtX" />
@@ -53,7 +66,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".forgetPswActivity" />
         <activity android:name=".PersonalActivity"></activity>
->>>>>>> dev
+
     </application>
 
 </manifest>
