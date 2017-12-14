@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".miniLockApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,7 +25,12 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="Gl7Gnpq3KDaDBrmNqNbXjuQRs1WWrEtX" />
+            android:value="Gl7Gnpq3KDaDBrmNqNbXjuQRs1WWrEtX"
+            />
+        <meta-data
+            android:name="com.chinamobile.iot.onenet.APP-KEY"
+            android:value="UNEdJ7p30oSi2epJFxomDwi2b38="
+            />
 
         <activity android:name=".launchActivity">
             <intent-filter>
@@ -35,7 +41,13 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"

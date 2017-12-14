@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVUser;
+import com.chinamobile.iot.onenet.OneNetApi;
 
 public class launchActivity extends AppCompatActivity {
 
@@ -19,8 +20,7 @@ public class launchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AVOSCloud.initialize(this,"YGB2ErmfjNR7dpAPhPjWFrt4-gzGzoHsz","mxwOs75S8CpyqBGRuGn942mn");
-        AVOSCloud.setDebugLogEnabled(true);
+
         setContentView(R.layout.activity_launch);
         registerBtn = (Button)findViewById(R.id.registerBtn);
         loginBtn = (Button)findViewById(R.id.loginBtn);
