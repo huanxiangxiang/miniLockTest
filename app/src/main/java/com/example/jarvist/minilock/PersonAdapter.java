@@ -1,13 +1,18 @@
 package com.example.jarvist.minilock;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+
+import java.io.FileNotFoundException;
 import java.util.List;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -17,11 +22,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PersonAdapter extends ArrayAdapter<Person> {
     private int resourceId;
+    private Context context;
 
     public PersonAdapter(Context context, int textViewResourceId, List<Person> objects)
     {
         super(context,textViewResourceId,objects);
         resourceId=textViewResourceId;
+        this.context = context;
     }
 
     @Override
@@ -34,7 +41,21 @@ public class PersonAdapter extends ArrayAdapter<Person> {
         if(person.getInformationContent()=="XX")
         {
             personImage.setVisibility(View.VISIBLE);
-            personImage.setImageResource(person.getImageId());
+            if(person.getImageUri() != null) {
+                try {
+                    Bitmap bitmap= BitmapFactory.decodeStream(context.getContentResolver().openInputStream(person.getImageUri()));
+                    personImage.setImageBitmap(bitmap);
+                }
+                catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            else if(!person.getImagePath().equals(""))
+            {
+                Bitmap bitmap=BitmapFactory.decodeFile(person.getImagePath());
+                personImage.setImageBitmap(bitmap);
+            }
             personCenter_name.setText(person.getPersonalInformation());
         }
         else

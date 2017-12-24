@@ -3,7 +3,10 @@ package com.example.jarvist.minilock;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,13 +17,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.GetDataCallback;
+import com.avos.avoscloud.ProgressCallback;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -35,8 +46,15 @@ import com.baidu.mapapi.model.LatLng;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView nickName;
     private TextView email;
     private View nav_headerLayout;
+    private CircleImageView headview;
 
     private String currentUserName ;
     private String currentEmail ;
@@ -75,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         fab = (FloatingActionButton)findViewById(R.id.fab);
         nickName = (TextView)nav_headerLayout.findViewById(R.id.nickname);
         email = (TextView)nav_headerLayout.findViewById(R.id.mail);
-
+        changeHeadView();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
@@ -292,7 +311,56 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    public void changeHeadView()
+    {
+        AVUser currentUser=AVUser.getCurrentUser();
+        if(currentUser.getString("ImageId")!=null)
+        {
+            AVQuery<AVObject> query = new AVQuery<>("_File");
+            query.getInBackground(currentUser.getString("ImageId"), new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    if (e == null) {
+                        Log.d("saved", "文件找到了");
+                        AVFile file = new AVFile("test.txt", avObject.getString("url"), new HashMap<String, Object>());
+                        file.getDataInBackground(new GetDataCallback() {
+                            @Override
+                            public void done(byte[] bytes, AVException e) {
+                                if (e == null) {
+                                    Log.d("saved", "文件大小" + bytes.length);
+                                } else {
+                                    Log.d("saved", "出错了" + e.getMessage());
+                                }
+                                File downloadedFile = new File(Environment.getExternalStorageDirectory() + "/test.png");
+                                FileOutputStream fout = null;
+                                try {
+                                    fout = new FileOutputStream(downloadedFile);
+                                    fout.write(bytes);
+                                    Log.d("saved", "文件写入成功.");
+                                    fout.close();
+                                } catch (FileNotFoundException e1) {
+                                    e1.printStackTrace();
+                                    Log.d("saved", "文件找不到.." + e1.getMessage());
+                                } catch (IOException e1) {
+                                    Log.d("saved", "文件读取异常.");
+                                }
+                                Bitmap bitmap= BitmapFactory.decodeFile(downloadedFile.getAbsolutePath());
+                                headview=(CircleImageView)findViewById(R.id.profile_photo);
+                                headview.setImageBitmap(bitmap);
+                            }
+                        }, new ProgressCallback() {
+                            @Override
+                            public void done(Integer integer) {
+                                Log.d("saved", "文件下载进度" + integer);
+                            }
+                        });
+                    } else {
+                        Log.d("saved", "出错了" + e.getMessage());
+                    }
+                }
+            });
+        }
+    }
 
 
 }
