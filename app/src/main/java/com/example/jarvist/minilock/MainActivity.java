@@ -74,7 +74,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements FloatingActionButton.OnClickListener,BaiduMap.OnMarkerClickListener{
+public class MainActivity extends AppCompatActivity implements FloatingActionButton.OnClickListener{
 
     public static  final String SITE_URL = "http://api.heclouds.com/devices/";
 
@@ -121,9 +121,10 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     }
 
 
-    void initViews(){
+    protected void initViews(){
         mapView = (MapView)findViewById(R.id.bmapView);
         mBaiduMap = mapView.getMap();
+
         BaiduMapInitUtils.init(mBaiduMap);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         nav_View = (NavigationView)findViewById(R.id.nav_view);
@@ -215,12 +216,17 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                 break;
             case R.id.fab:
                 ToastUtils.show(MainActivity.this,"fab clicked");
-                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-                integrator.setOrientationLocked(false)//设置扫码的方向
-                        .setPrompt("将条码放置于框内")//设置下方提示文字
-                        .setCameraId(0)//前置或后置摄像头
-                        .setBeepEnabled(false)//扫码提示音，默认开启
-                        .initiateScan();
+                try {
+                    IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                    integrator.setOrientationLocked(false)//设置扫码的方向
+                            .setPrompt("将条码放置于框内")//设置下方提示文字
+                            .setCameraId(0)//前置或后置摄像头
+                            .setBeepEnabled(false)//扫码提示音，默认开启
+                            .initiateScan();
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
@@ -316,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     }
 
     public void markerAppear(){
-        Toast.makeText(MainActivity.this,"marker appear",Toast.LENGTH_SHORT).show();
+        ToastUtils.show(MainActivity.this,"marker appear");
         currentLongtitude = LocInit.getCurrentLongtitude();
         currentLatitude = LocInit.getCurrentLatitude();
         double mklatitude = 39.963175;
@@ -332,10 +338,5 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                 mklatitude,mklongtitude,currentLatitude,currentLongtitude));
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-
-        return false;
-    }
 
 }

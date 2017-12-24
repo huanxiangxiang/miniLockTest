@@ -1,6 +1,8 @@
 package com.example.jarvist.minilock;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -28,7 +30,7 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
  * Created by Jarvist on 2017/12/9.
  */
 
-public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,OnGetRoutePlanResultListener {
+public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,OnGetRoutePlanResultListener,View.OnClickListener {
 
     private Context context;
     private InfoWindow infoWindow;
@@ -41,7 +43,10 @@ public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,
     private double mDesLongtitude;
     RoutePlanSearch mSearch = null;
     private OverlayManager routeOverlay = null;
-
+    private View infoView;
+    private Button walking;
+    private Button biking;
+    private Button drving;
     public BaiduMarkerClickListener(Context context,BaiduMap mBaiduMap,
                                     double mCurrentLantitude, double mCurrentLongtitude,
                                     double mDesLantitude,double mDesLongtitude){
@@ -60,15 +65,21 @@ public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,
     @Override
     public boolean onMarkerClick(Marker marker) {
         final LatLng markerll = marker.getPosition();
-        navigate = new Button(context.getApplicationContext());
-        navigate.setText("导航");
-        InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick() {
-                SearchProcess();
-            }
-        };
-        infoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(navigate),markerll,-70,listener);
+        LayoutInflater inflater = LayoutInflater.from(context.getApplicationContext());
+        infoView = inflater.inflate(R.layout.layout_infowindow,null);
+        walking = (Button)infoView.findViewById(R.id.walk);
+        biking = (Button)infoView.findViewById(R.id.bike);
+        drving = (Button)infoView.findViewById(R.id.drive)
+        walking.setOnClickListener(this);
+        biking.setOnClickListener(this);
+        drving.setOnClickListener(this);
+//        InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
+//            @Override
+//            public void onInfoWindowClick() {
+//                SearchProcess();
+//            }
+//        };
+        infoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(infoView),markerll,-70,null);
         mBaiduMap.showInfoWindow(infoWindow);
         return false;
     }
@@ -129,5 +140,17 @@ public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,
 
     }
 
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.walk:
+                break;
+            case R.id.bike:
+                break;
+            case R.id.drive:
+                break;
+            default:
+                break;
+        }
+    }
 }
