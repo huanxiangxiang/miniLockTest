@@ -30,7 +30,7 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
  * Created by Jarvist on 2017/12/9.
  */
 
-public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,OnGetRoutePlanResultListener,View.OnClickListener {
+public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,OnGetRoutePlanResultListener {
 
     private Context context;
     private InfoWindow infoWindow;
@@ -65,21 +65,18 @@ public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,
     @Override
     public boolean onMarkerClick(Marker marker) {
         final LatLng markerll = marker.getPosition();
-        LayoutInflater inflater = LayoutInflater.from(context.getApplicationContext());
-        infoView = inflater.inflate(R.layout.layout_infowindow,null);
-        walking = (Button)infoView.findViewById(R.id.walk);
-        biking = (Button)infoView.findViewById(R.id.bike);
-        drving = (Button)infoView.findViewById(R.id.drive)
-        walking.setOnClickListener(this);
-        biking.setOnClickListener(this);
-        drving.setOnClickListener(this);
-//        InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
-//            @Override
-//            public void onInfoWindowClick() {
-//                SearchProcess();
-//            }
-//        };
-        infoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(infoView),markerll,-70,null);
+//        LayoutInflater inflater = LayoutInflater.from(context.getApplicationContext());
+//        infoView = inflater.inflate(R.layout.layout_infowindow,null);
+//        walking = (Button)infoView.findViewById(R.id.walk);
+//        biking = (Button)infoView.findViewById(R.id.bike);
+        drving = (Button)infoView.findViewById(R.id.drive);
+        InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick() {
+                SearchProcess();
+            }
+        };
+        infoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(drving),markerll,-70,listener);
         mBaiduMap.showInfoWindow(infoWindow);
         return false;
     }
@@ -138,19 +135,5 @@ public class BaiduMarkerClickListener implements BaiduMap.OnMarkerClickListener,
     @Override
     public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.walk:
-                break;
-            case R.id.bike:
-                break;
-            case R.id.drive:
-                break;
-            default:
-                break;
-        }
     }
 }

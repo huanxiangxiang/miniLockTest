@@ -209,10 +209,9 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.turnback:
-                /*isFirstLocate = true;
-                mLocationClient = new LocationClient(getApplicationContext());
-                mLocationClient.registerLocationListener(myListener);
-                mBaiduMap.setMyLocationEnabled(true);*/
+                LocInit.setFirstLocate(true);
+                LocInit.getmLocationClient().start();
+                mBaiduMap.setMyLocationEnabled(true);
                 break;
             case R.id.fab:
                 ToastUtils.show(MainActivity.this,"fab clicked");

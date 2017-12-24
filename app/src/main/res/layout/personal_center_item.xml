@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:descendantFocusability="beforeDescendants"><!-- 为突出卡片效果，需设置左右padding,上下通过listView的divider设置 -->
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:background="@drawable/card_background_selector"
+        android:descendantFocusability="afterDescendants">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="210dp"
+        android:id="@+id/personCenter_name"
+        android:textSize="15sp"
+        android:layout_gravity="center_vertical"
+        />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/personImage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#ffffff"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/personCenter_content"
+        android:layout_marginLeft="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未填写"
+        android:textSize="15sp"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        />
+</LinearLayout>
+</FrameLayout>

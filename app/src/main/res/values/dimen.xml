@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="design_fab_size_normal" tools:ignore="PrivateResource">72dp</dimen>
+    <dimen name="design_fab_size_mini" tools:ignore="PrivateResource">40dp</dimen>
     <dimen name="actionBar_Size"> 44dp</dimen>
 </resources>

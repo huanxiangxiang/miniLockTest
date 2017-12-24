@@ -49,9 +49,11 @@ android:layout_height="match_parent">
         android:id="@+id/turnback"
         app:borderWidth="0dp"
         android:visibility="visible"
-        app:fabSize="auto"
+        app:fabSize="mini"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="2dp "
         android:layout_gravity="bottom|start"
-        android:backgroundTint="#c9ffffff"/>
+        android:backgroundTint="#ffffff"/>
 
 
 

@@ -36,6 +36,10 @@ public class BmapLocationInit {
         mLocationClient.registerLocationListener(myListener);
     }
 
+    public void setFirstLocate(boolean firstLocate) {
+        isFirstLocate = firstLocate;
+    }
+
     public double getCurrentLatitude() {
         return currentLatitude;
     }
