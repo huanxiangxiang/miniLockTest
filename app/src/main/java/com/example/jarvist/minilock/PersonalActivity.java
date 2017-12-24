@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -84,14 +85,17 @@ public class PersonalActivity extends AppCompatActivity {
         //cardView.setCardElevation(8);//设置阴影部分大小
         //cardView.setContentPadding(5,5,5,5);//设置图片距离阴影大小
 
-        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("个人中心");
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         currentUser=getCurrentUser();
         authorityId=currentUser.getString("authority");
-        Toast.makeText(PersonalActivity.this,authorityId,Toast.LENGTH_SHORT).show();
         //Toast.makeText(PersonalActivity.this,authorityId,Toast.LENGTH_SHORT).show();
-        toolbar.setNavigationIcon(R.drawable.back_button);
+        //Toast.makeText(PersonalActivity.this,authorityId,Toast.LENGTH_SHORT).show();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -371,7 +375,8 @@ public class PersonalActivity extends AppCompatActivity {
                 break;
             default:
                 break;
-    }}
+
+        }}
 
     @TargetApi(19)
     private void handleImageOnKitKat(Intent data)
@@ -427,7 +432,7 @@ public class PersonalActivity extends AppCompatActivity {
                 path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             }
             cursor.close();
-    }
+         }
         return path;
     }
 
@@ -443,9 +448,12 @@ public class PersonalActivity extends AppCompatActivity {
             String imageName;
             imageName=getPicNameFromPath(imagePath);
             //Toast.makeText(this,"imageName is "+imageName,Toast.LENGTH_LONG).show();
-            try {
                 if(currentUser.getString("ImageId")==null)
-                    file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
+                    try {
+                        file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
+                    } catch(FileNotFoundException e){
+                        e.printStackTrace();
+                    }
                 else
                 {
                     AVQuery<AVObject> query = new AVQuery<>("_File");
@@ -456,13 +464,14 @@ public class PersonalActivity extends AppCompatActivity {
 
                         }
                     });
-                    file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
+                    try{
+                        file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
+                    }catch (FileNotFoundException e){
+                        e.printStackTrace();
+                    }
                 }
-            }
-           catch(FileNotFoundException e){
-                e.printStackTrace();
 
-        }
+
 
         file.saveInBackground(new SaveCallback() {
             @Override

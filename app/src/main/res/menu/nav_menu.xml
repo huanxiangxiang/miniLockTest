@@ -7,9 +7,9 @@
             android:icon="@drawable/account"
             android:title="个人中心"/>
         <item
-            android:id="@+id/nav_chatting"
+            android:id="@+id/nav_locked"
             android:icon="@drawable/chatting"
-            android:title="私信"/>
+            android:title="上锁"/>
         <item
             android:id="@+id/nav_notification"
             android:icon="@drawable/notification"

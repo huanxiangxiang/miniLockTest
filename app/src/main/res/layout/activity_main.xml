@@ -35,12 +35,25 @@ android:layout_height="match_parent">
         android:id="@+id/fab"
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
-        android:background="#46db51"
+        android:backgroundTint="#5ed371"
         android:src="@drawable/qrcode_scan"
         app:fabSize="normal"
         app:elevation="8dp"
+        app:borderWidth="0dp"
         tools:layout_editor_absoluteY="75dp"
         tools:layout_editor_absoluteX="0dp" />
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/adjust"
+        android:id="@+id/turnback"
+        app:borderWidth="0dp"
+        android:visibility="visible"
+        app:fabSize="mini"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="2dp "
+        android:layout_gravity="bottom|start"
+        android:backgroundTint="#ffffff"/>
 
 
 

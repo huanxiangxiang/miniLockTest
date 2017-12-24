@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         ActionBar actionBar=getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back_button);
         }
         accountText = (EditText)findViewById(R.id.editAccount);
         passwordText = (EditText)findViewById(R.id.editPassword);
