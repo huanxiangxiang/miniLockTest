@@ -120,13 +120,13 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         initViews();
+        mapInit();
         AVUser currentUser = AVUser.getCurrentUser();
         if (currentUser != null) {
             currentUserName = AVUser.getCurrentUser().getUsername();
             currentEmail = AVUser.getCurrentUser().getEmail();
             nickName.setText(currentUserName);
             email.setText(currentEmail);
-            mapInit();
         }
         else{
             startActivity(new Intent(MainActivity.this,launchActivity.class));
@@ -277,8 +277,9 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     protected void onResume(){
         super.onResume();
         if(AVUser.getCurrentUser()!=null)
-        changeHeadView();
+            changeHeadView();
         mapView.onResume();
+
     }
 
     @Override

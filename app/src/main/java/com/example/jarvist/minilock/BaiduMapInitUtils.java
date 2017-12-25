@@ -22,5 +22,6 @@ public class BaiduMapInitUtils {
     public static void init( BaiduMap baiduMap){
         baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         baiduMap.setMyLocationEnabled(true);
+        baiduMap.setTrafficEnabled(true);
     }
 }

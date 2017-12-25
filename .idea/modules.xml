@@ -4,8 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/miniLock.iml" filepath="$PROJECT_DIR$/miniLock.iml" />
-      <module fileurl="file://E:\Android\GroupProject\miniLockTest\miniLock.iml" filepath="E:\Android\GroupProject\miniLockTest\miniLock.iml" />
-      <module fileurl="file://D:\ASworks\miniLock\miniLockTest.iml" filepath="D:\ASworks\miniLock\miniLockTest.iml" />
     </modules>
   </component>
 </project>
