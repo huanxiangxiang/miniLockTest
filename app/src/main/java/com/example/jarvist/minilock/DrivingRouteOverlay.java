@@ -134,8 +134,8 @@ public class DrivingRouteOverlay extends OverlayManager {
                 isDotLine = true;
             }
             PolylineOptions option = new PolylineOptions().points(points).textureIndex(traffics)
-                    .width(20).dottedLine(isDotLine).focus(true)
-                    .color(getLineColor() != 0 ? getLineColor() : Color.argb(178, 0, 78, 255)).zIndex(0);
+                    .width(15).dottedLine(isDotLine).focus(true)
+                    .color(Color.argb(255, 100, 215,236)).zIndex(0);
             if (isDotLine) {
                 option.customTextureList(getCustomTextureList());
             }

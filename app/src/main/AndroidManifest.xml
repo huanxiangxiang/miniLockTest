@@ -73,6 +73,9 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".forgetPswActivity" />
         <activity android:name=".PersonalActivity"></activity>
+        <activity
+            android:name="com.avos.avoscloud.feedback.ThreadActivity" >
+        </activity>
 
     </application>
 

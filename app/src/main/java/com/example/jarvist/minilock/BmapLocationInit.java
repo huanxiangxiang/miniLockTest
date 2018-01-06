@@ -48,9 +48,7 @@ public class BmapLocationInit {
         return currentLongtitude;
     }
 
-    public LocationClient getmLocationClient() {
-        return mLocationClient;
-    }
+
 
     public void initLocation(){
         option = new LocationClientOption();
@@ -64,6 +62,11 @@ public class BmapLocationInit {
     public void requestLocation(){
         initLocation();
         mLocationClient.start();
+    }
+
+    public void setLocationStop(){
+        if(mLocationClient != null)
+        mLocationClient.stop();
     }
 
 
@@ -94,6 +97,7 @@ public class BmapLocationInit {
             LatLng ll = new LatLng(location.getLatitude(),location.getLongitude());
             MapStatusUpdate update = MapStatusUpdateFactory.newLatLngZoom(ll,18f);
             mBaidumap.animateMapStatus(update);
+
         }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,9 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.feedback.FeedbackAgent;
+import com.avos.avoscloud.feedback.FeedbackThread;
+import com.avos.avoscloud.feedback.ThreadActivity;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -45,6 +50,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
 
     public static  final String SITE_URL = "http://api.heclouds.com/devices/";
 
+    private ArrayList<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
     private MapView mapView;
     private DrawerLayout mDrawerLayout;
     private NavigationView nav_View;
@@ -102,44 +109,56 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     private TextView email;
     private View nav_headerLayout;
     private CircleImageView headview;
-
+    public static boolean isShowInfo = false ;
     private String currentUserName ;
     private String currentEmail ;
-    private boolean isFirstLocate = true;
-    //public LocationClient mLocationClient = null;
-    //public BDAbstractLocationListener myListener = new MyLocationListener();
     private Marker mk ;
     private double currentLatitude;
     private double currentLongtitude;
-    private boolean haveUser;
     private BmapLocationInit LocInit;
+    private long mExitTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
+        AVUser currentUser = AVUser.getCurrentUser();
         setContentView(R.layout.activity_main);
+        if(currentUser == null)
+        {
+            startActivity(new Intent(MainActivity.this,launchActivity.class));
+            finish();
+        }
         initViews();
         mapInit();
-        AVUser currentUser = AVUser.getCurrentUser();
         if (currentUser != null) {
             currentUserName = AVUser.getCurrentUser().getUsername();
             currentEmail = AVUser.getCurrentUser().getEmail();
             nickName.setText(currentUserName);
             email.setText(currentEmail);
+            requestPermissions();
+            
         }
-        else{
-            startActivity(new Intent(MainActivity.this,launchActivity.class));
-        }
-        requestPermissions();
+        FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
+        agent.sync();
     }
 
 
 
     protected void mapInit(){
-        mapView = (MapView)findViewById(R.id.bmapView);
-        mBaiduMap = mapView.getMap();
-        BaiduMapInitUtils.init(mBaiduMap);
+        if(mapView != null){
+            mBaiduMap = mapView.getMap();
+            BaiduMapInitUtils.init(mBaiduMap);
+        }
+        LocInit = new BmapLocationInit(getApplicationContext(),mBaiduMap);
+    }
+
+    protected void mapDestroy(){
+        if(mapView != null)
+            mapView.onDestroy();
+        if(mBaiduMap != null){
+            mBaiduMap.setMyLocationEnabled(false);
+        }
     }
 
     protected void initViews(){
@@ -150,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
         }
+        mapView = (MapView)findViewById(R.id.bmapView);
         nav_View = (NavigationView)findViewById(R.id.nav_view);
         nav_headerLayout = nav_View.inflateHeaderView(R.layout.nav_header);
 
@@ -181,16 +201,19 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                         break;
                     case R.id.nav_notification:
                         markerAppear();
+                        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(14.f));
                         break;
                     case R.id.nav_logOut:
-                        AVFile file = new AVFile();
-                        //file.getOwnerObjectId();
                         AVUser.logOut();// 清除缓存用户对象
-                        AVUser currentUser = AVUser.getCurrentUser();
                         Intent intent = new Intent(MainActivity.this,launchActivity.class);
                         startActivity(intent);
                         MainActivity.this.finish();
                         break;// 现在的 currentUser 是 null 了
+                    case R.id.nav_feedback:
+                        FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
+                        agent.startDefaultThreadActivity();
+
+                        break;
                     default:
                         mDrawerLayout.closeDrawers();
                         break;
@@ -216,7 +239,6 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
             ActivityCompat.requestPermissions(MainActivity.this,permissions,1);
         }
         else{
-            LocInit = new BmapLocationInit(getApplicationContext(),mBaiduMap);
             LocInit.requestLocation();
         }
 
@@ -232,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
         switch (v.getId()){
             case R.id.turnback:
                 LocInit.setFirstLocate(true);
-                LocInit.getmLocationClient().start();
+                LocInit.requestLocation();
                 mBaiduMap.setMyLocationEnabled(true);
                 break;
             case R.id.fab:
@@ -278,23 +300,23 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
         super.onResume();
         if(AVUser.getCurrentUser()!=null)
             changeHeadView();
-        mapView.onResume();
+        if(mapView != null)
+            mapView.onResume();
 
     }
 
     @Override
     protected void onPause(){
         super.onPause();
+        if(mapView != null)
         mapView.onPause();
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        LocInit.getmLocationClient().stop();
-        //mLocationClient.stop();
-        mapView.onDestroy();
-        mBaiduMap.setMyLocationEnabled(false);
+        LocInit.setLocationStop();
+        mapDestroy();
     }
 
     @Override
@@ -324,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     }
 
     @Override
-
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         final String deviceId = result.getContents();
@@ -345,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
             }
         }
     }
+
     public void changeHeadView() {
         AVUser currentUser = AVUser.getCurrentUser();
         if(currentUser != null) {
@@ -395,22 +417,44 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
             }
         }
     }
+
+
     public void markerAppear(){
         ToastUtils.show(MainActivity.this,"marker appear");
         currentLongtitude = LocInit.getCurrentLongtitude();
         currentLatitude = LocInit.getCurrentLatitude();
-        double mklatitude = 39.963175;
-        double mklongtitude = 116.400244;
-        LatLng ll = new LatLng(mklatitude,mklongtitude);
         BitmapDescriptor marker = BitmapDescriptorFactory
-                .fromResource(R.drawable.map_marker);
-        OverlayOptions option = new MarkerOptions()
-                .position(ll)
-                .icon(marker);
-        mk = (Marker)(mBaiduMap.addOverlay(option));
+                .fromResource(R.drawable.mapmark);
+        for(int i = 0;i<5;i++) {
+            double mklatitude = 39.96 + 0.022 * i ;
+            double mklongtitude = 116.40 + 0.02 * i;
+            LatLng mk = new LatLng(mklatitude, mklongtitude);
+            OverlayOptions option = new MarkerOptions().position(mk).icon(marker);
+            markerList.add(option);
+        }
+        mBaiduMap.addOverlays(markerList);
         mBaiduMap.setOnMarkerClickListener(new BaiduMarkerClickListener(getApplicationContext(),mBaiduMap,
-                mklatitude,mklongtitude,currentLatitude,currentLongtitude));
+                currentLatitude,currentLongtitude));
     }
 
 
+
+    @Override
+    public void onBackPressed() {
+        if(isShowInfo) {
+            mBaiduMap.clear();
+            isShowInfo = false;
+        }
+        else{
+            if(System.currentTimeMillis() - mExitTime > 2000){
+                Toast.makeText(MainActivity.this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            }
+            else{
+                System.exit(0);
+            }
+        }
+
+
+    }
 }

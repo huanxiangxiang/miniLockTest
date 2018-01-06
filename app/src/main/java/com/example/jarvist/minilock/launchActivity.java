@@ -29,9 +29,6 @@ public class launchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent  = new Intent(launchActivity.this,RegisterActivity.class);
                 startActivity(intent);
-                launchActivity.this.finish();
-
-
             }
         });
 
@@ -40,7 +37,6 @@ public class launchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent  = new Intent(launchActivity.this,LoginActivity.class);
                 startActivity(intent);
-                launchActivity.this.finish();
             }
         });
 
@@ -62,8 +58,6 @@ public class launchActivity extends AppCompatActivity {
             bundle.putString("currentUserEmail",currentUserEmail);
             intent.putExtras(bundle);
             startActivity(intent);
-
-
         }
     }
 }

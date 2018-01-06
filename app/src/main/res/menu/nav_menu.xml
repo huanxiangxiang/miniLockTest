@@ -12,27 +12,31 @@
             android:title="上锁"/>
         <item
             android:id="@+id/nav_notification"
-            android:icon="@drawable/notification"
-            android:title="通知"/>
-
-
+            android:icon="@drawable/magnify"
+            android:title="搜索"/>
     </group>
     <group
         android:checkableBehavior="none"
         android:id="@+id/group_settings">
     <item android:id="@+id/nav_theme"
+        android:icon="@drawable/style"
         android:title="主题风格"/>
     <item android:id="@+id/nav_nightMode"
+        android:icon="@drawable/night"
         android:title="夜间模式"/>
     <item android:id="@+id/nav_setting"
+        android:icon="@drawable/settings"
         android:title="设置"/>
     </group>
-    <item android:id="@+id/nav_suggestion"
+    <item android:id="@+id/nav_feedback"
+        android:icon="@drawable/feedback"
         android:title="意见反馈"/>
     <item android:id="@+id/nav_about"
+        android:icon="@drawable/aboutus"
         android:title="关于"/>
     <item android:id="@+id/nav_logOut"
-            android:title="退出登录"/>
+        android:icon="@drawable/logout"
+            android:title="切换账号"/>
 
 
 </menu>

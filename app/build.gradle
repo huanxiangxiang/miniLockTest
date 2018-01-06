@@ -61,7 +61,7 @@ dependencies {
 
     // 推送与实时聊天需要的包
     compile('cn.leancloud.android:avoscloud-push:v4.4.4@aar') { transitive = true }
-
+    compile ('cn.leancloud.android:avoscloud-feedback:v4.4.4@aar')
     // LeanCloud 统计包
     compile('cn.leancloud.android:avoscloud-statistics:v4.4.4')
 

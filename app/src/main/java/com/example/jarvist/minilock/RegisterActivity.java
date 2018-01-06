@@ -38,7 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
         ActionBar actionBar=getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back_button);
         }
         numberText = (EditText)findViewById(R.id.editnum);
         mailText = (EditText)findViewById(R.id.mail) ;

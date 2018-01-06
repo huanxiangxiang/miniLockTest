@@ -19,7 +19,6 @@ public class forgetPswActivity extends AppCompatActivity {
         ActionBar actionBar=getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back_button);
         }
     }
     @Override
@@ -29,7 +28,7 @@ public class forgetPswActivity extends AppCompatActivity {
             case android.R.id.home:
                 Intent intent=new Intent(forgetPswActivity.this,LoginActivity.class);
                 startActivity(intent);
-               forgetPswActivity.this.finish();
+                forgetPswActivity.this.finish();
                 break;
             default:
                 break;

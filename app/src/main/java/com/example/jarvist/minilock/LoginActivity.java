@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
                         if(e == null){
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
-                            LoginActivity.this.finish();
                             Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
                         }
                         else{
@@ -74,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(LoginActivity.this,forgetPswActivity.class);
                 startActivity(intent1);
-                LoginActivity.this.finish();
             }
         });
 
@@ -87,11 +85,15 @@ public class LoginActivity extends AppCompatActivity {
             case android.R.id.home:
                 Intent intent=new Intent(LoginActivity.this,launchActivity.class);
                 startActivity(intent);
-                LoginActivity.this.finish();
                 break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

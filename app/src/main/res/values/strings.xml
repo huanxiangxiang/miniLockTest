@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">miniLock</string>
+    <string name="nav_walk">步行</string>
+    <string name="nav_bike">骑行</string>
+    <string name="nav_car">驾车</string>
 </resources>
