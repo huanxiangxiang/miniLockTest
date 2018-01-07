@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
             nickName.setText(currentUserName);
             email.setText(currentEmail);
             requestPermissions();
-            
+
         }
         FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
         agent.sync();
