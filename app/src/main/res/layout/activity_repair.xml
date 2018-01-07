@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.jarvist.minilock.RepairActivity"
+    >
+
+    <include layout="@layout/toolbar_layout">
+
+    </include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#6b6868"
+        android:textStyle="bold"
+        android:text="当前位置:"
+        android:layout_marginBottom="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/my_location"/>
+
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <EditText
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/advice"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:inputType="textMultiLine"
+        android:background="#f4f1f1"
+        android:hint="请输入锁的ID以及损坏情况"
+        android:gravity="top"
+        android:textSize="15sp"
+        />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#6b6868"
+        android:textStyle="bold"
+        android:text="上传具体照片（最多两张）"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/repair_photo1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/add_photo1"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/clear_photo1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/clear"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/repair_photo2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:src="@drawable/add_photo1"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/clear_photo2"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/clear"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+<Button
+    android:id="@+id/add_advice"
+    android:layout_marginTop="10dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="140dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/button_selector"
+    android:gravity="center"
+    android:textSize="15sp"
+    android:text="立即提交"
+    android:clickable="false"
+    android:enabled="false"/>
+
+    </LinearLayout>
+
+</LinearLayout>

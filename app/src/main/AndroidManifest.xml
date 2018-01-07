@@ -10,12 +10,30 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <uses-feature android:name="android.hardware.autofocus" />
+
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 震动权限 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" /> <!-- 使用照相机权限 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <!-- 自动聚焦权限 -->
     <application
         android:name=".miniLockApp"
         android:allowBackup="true"
@@ -32,9 +50,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
-
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -45,10 +62,6 @@
             android:value="UNEdJ7p30oSi2epJFxomDwi2b38="
             />
 
-        <activity android:name=".launchActivity"
-            android:launchMode="singleTask">
-
-        </activity>
         <activity
             android:launchMode="singleTask"
             android:name=".MainActivity"
@@ -59,24 +72,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.journeyapps.barcodescanner.CaptureActivity"
-            android:screenOrientation="fullSensor"
-            tools:replace="screenOrientation" />
-
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-     <activity android:name=".LoginActivity" />
+
+        <activity android:name=".LoginActivity" />
         <activity android:name=".showActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".forgetPswActivity" />
-        <activity android:name=".PersonalActivity"></activity>
+        <activity android:name=".PersonalActivity"/>
         <activity
             android:name="com.avos.avoscloud.feedback.ThreadActivity" >
         </activity>
+        <activity android:name=".ShareActivity" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:theme="@style/translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sdksample" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.google.zxing.activity.CaptureActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity android:name=".RecordActivity"/>
     </application>
 
 </manifest>

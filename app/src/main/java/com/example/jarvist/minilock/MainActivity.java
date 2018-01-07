@@ -6,7 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
+import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -42,10 +48,6 @@ import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.feedback.FeedbackAgent;
 import com.avos.avoscloud.feedback.FeedbackThread;
 import com.avos.avoscloud.feedback.ThreadActivity;
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -66,10 +68,8 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
-
+import com.google.zxing.activity.CaptureActivity;
+import com.google.zxing.camera.CameraManager;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -95,38 +95,50 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements FloatingActionButton.OnClickListener{
+public class MainActivity extends AppCompatActivity implements FloatingActionButton.OnClickListener {
 
-    public static  final String SITE_URL = "http://api.heclouds.com/devices/";
+    public static final String SITE_URL = "http://api.heclouds.com/devices/";
 
     private ArrayList<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
+    private static final int REQUEST_CODE = 1;
+    private static final int CAMERA_OK = 1;
     private MapView mapView;
     private DrawerLayout mDrawerLayout;
     private NavigationView nav_View;
-    private FloatingActionButton fab,fab2;
+    private FloatingActionButton fab, fab2;
     private BaiduMap mBaiduMap;
     private TextView nickName;
     private TextView email;
     private View nav_headerLayout;
     private CircleImageView headview;
-    public static boolean isShowInfo = false ;
-    private String currentUserName ;
-    private String currentEmail ;
-    private Marker mk ;
+    public static boolean isShowInfo = false;
+    private Marker mk;
     private double currentLatitude;
     private double currentLongtitude;
     private BmapLocationInit LocInit;
     private long mExitTime;
+    private String locateAddress;
+    //光线传感器相关
+    private SensorManager sm;
+    private Sensor ligthSensor;
+    private Camera mCamera;
+    //private CameraManager manager;
+    private String currentUserName;
+    private String currentEmail;
+    private boolean isScanCode = false;
+    private boolean isFlashOn = false;
+    private Camera.Parameters params;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         SDKInitializer.initialize(getApplicationContext());
         AVUser currentUser = AVUser.getCurrentUser();
         setContentView(R.layout.activity_main);
-        if(currentUser == null)
-        {
-            startActivity(new Intent(MainActivity.this,launchActivity.class));
+        if (currentUser == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
         initViews();
@@ -144,58 +156,90 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     }
 
 
-
-    protected void mapInit(){
-        if(mapView != null){
+    protected void mapInit() {
+        if (mapView != null) {
             mBaiduMap = mapView.getMap();
             BaiduMapInitUtils.init(mBaiduMap);
         }
-        LocInit = new BmapLocationInit(getApplicationContext(),mBaiduMap);
+        LocInit = new BmapLocationInit(getApplicationContext(), mBaiduMap);
     }
 
-    protected void mapDestroy(){
-        if(mapView != null)
+    protected void mapDestroy() {
+        if (mapView != null)
             mapView.onDestroy();
-        if(mBaiduMap != null){
+        if (mBaiduMap != null) {
             mBaiduMap.setMyLocationEnabled(false);
         }
     }
 
-    protected void initViews(){
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+    protected void initViews() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        //光线传感器使用注册
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        //manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        ligthSensor = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
+        sm.registerListener(new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                //获取精度
+                float acc = event.accuracy;
+                //获取光线强度
+                float lux = event.values[0];
+                int retval = Float.compare(lux, (float) 10.0);
+                String s = "精度:" + acc + ",光线强度:" + lux + String.valueOf(isScanCode) + "   " + String.valueOf(isFlashOn + "   " + String.valueOf(retval));
+                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                if (isScanCode) {
+                    if (!isFlashOn) {
+                        if (retval < 0) {
+                            openLight();
+                            isFlashOn = true;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        }, ligthSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        nickName = (TextView) nav_headerLayout.findViewById(R.id.nickname);
+        email = (TextView) nav_headerLayout.findViewById(R.id.mail);
+
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
         }
-        mapView = (MapView)findViewById(R.id.bmapView);
-        nav_View = (NavigationView)findViewById(R.id.nav_view);
+        mapView = (MapView) findViewById(R.id.bmapView);
+        nav_View = (NavigationView) findViewById(R.id.nav_view);
         nav_headerLayout = nav_View.inflateHeaderView(R.layout.nav_header);
 
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab2 = (FloatingActionButton) findViewById(R.id.turnback);
         fab.setOnClickListener(this);
         fab2.setOnClickListener(this);
-        nickName = (TextView)nav_headerLayout.findViewById(R.id.nickname);
-        email = (TextView)nav_headerLayout.findViewById(R.id.mail);
+        nickName = (TextView) nav_headerLayout.findViewById(R.id.nickname);
+        email = (TextView) nav_headerLayout.findViewById(R.id.mail);
 
 
         nav_View.setCheckedItem(R.id.nav_locked);
         nav_View.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.nav_account:
-                        Intent start_account=new Intent(MainActivity.this,PersonalActivity.class);
+                        Intent start_account = new Intent(MainActivity.this, PersonalActivity.class);
                         startActivity(start_account);
                         break;
                     case R.id.nav_locked:
-                        try{
+                        try {
                             Toast.makeText(MainActivity.this, "申请上锁成功，请稍候......", Toast.LENGTH_SHORT).show();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         break;
@@ -205,15 +249,30 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                         break;
                     case R.id.nav_logOut:
                         AVUser.logOut();// 清除缓存用户对象
-                        Intent intent = new Intent(MainActivity.this,launchActivity.class);
-                        startActivity(intent);
-                        MainActivity.this.finish();
+                        //AVUser currentUser = AVUser.getCurrentUser();
+                        Intent intent2 = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent2);
+                        //MainActivity.this.finish();
                         break;// 现在的 currentUser 是 null 了
                     case R.id.nav_feedback:
                         FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
                         agent.startDefaultThreadActivity();
-
                         break;
+                    case R.id.nav_suggestion:
+                        Intent start_advice = new Intent(MainActivity.this, RepairActivity.class);
+                        start_advice.putExtra("address", locateAddress);
+                        startActivity(start_advice);
+                        //MainActivity.this.finish();
+                        break;
+                    case R.id.nav_share:
+                        Intent start_share = new Intent(MainActivity.this, ShareActivity.class);
+                        startActivity(start_share);
+                        //MainActivity.this.finish();
+                        break;
+                    case R.id.nav_record:
+                        Intent start_record = new Intent(MainActivity.this, RecordActivity.class);
+                        startActivity(start_record);
+                        //MainActivity.this.finish();
                     default:
                         mDrawerLayout.closeDrawers();
                         break;
@@ -222,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
             }
         });
     }
+
 
     void requestPermissions(){
         List<String> permissionList = new ArrayList<>();
@@ -243,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
         }
 
     }
+
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
@@ -260,12 +321,18 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
             case R.id.fab:
                 ToastUtils.show(MainActivity.this,"fab clicked");
                 try {
-                    IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-                    integrator.setOrientationLocked(false)//设置扫码的方向
-                            .setPrompt("将条码放置于框内")//设置下方提示文字
-                            .setCameraId(0)//前置或后置摄像头
-                            .setBeepEnabled(false)//扫码提示音，默认开启
-                            .initiateScan();
+                    if (Build.VERSION.SDK_INT > 22) {
+                        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            //先判断有没有权限 ，没有就在这里进行权限的申请
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{android.Manifest.permission.CAMERA}, CAMERA_OK);
+                        }
+                        isScanCode = true;
+                        Toast.makeText(MainActivity.this, "fab clicked", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    }
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -273,7 +340,6 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                 break;
             default:
                 break;
-
         }
     }
 
@@ -347,25 +413,36 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        final String deviceId = result.getContents();
+        super.onActivityResult(requestCode, resultCode, data);
+        String scanResult = null;
+        if (resultCode == RESULT_OK) { //RESULT_OK = -1
+            Bundle bundle = data.getExtras();
+            scanResult = bundle.getString("result");
+            Toast.makeText(MainActivity.this, scanResult, Toast.LENGTH_LONG).show();
+        }
+        final String deviceId = scanResult;
         final JSONObject object = new JSONObject();
         if (deviceId != null) {
-            try{
-                object.put("status",1);
-                new Thread(){
+            try {
+                object.put("status", 1);
+                new Thread() {
+
                     @Override
                     public void run() {
-                        HttpUtils.post(MainActivity.this,SITE_URL,deviceId,object);
+                        HttpUtils.post(MainActivity.this, SITE_URL, deviceId, object);
                     }
                 }.start();
-                Log.i("deviceId",deviceId);
+                isScanCode = false;
+                isFlashOn = false;
+                closeLight();
+                Log.i("deviceId", deviceId);
                 Toast.makeText(MainActivity.this, "申请开锁成功，请稍候......", Toast.LENGTH_SHORT).show();
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
 
     public void changeHeadView() {
         AVUser currentUser = AVUser.getCurrentUser();
@@ -419,6 +496,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     }
 
 
+
     public void markerAppear(){
         ToastUtils.show(MainActivity.this,"marker appear");
         currentLongtitude = LocInit.getCurrentLongtitude();
@@ -457,4 +535,26 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
 
 
     }
+
+    private void openLight() //开闪光灯
+    {
+        mCamera = CameraManager.getCamera();
+        params = mCamera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        mCamera.setParameters(params);
+        mCamera.startPreview();
+    }
+
+    private void closeLight() //关闪光灯
+    {
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        mCamera.setParameters(params);
+    }
+
+
 }
+
+
+
+
+

@@ -21,8 +21,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +36,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -87,17 +87,14 @@ public class PersonalActivity extends AppCompatActivity {
         //cardView.setCardElevation(8);//设置阴影部分大小
         //cardView.setContentPadding(5,5,5,5);//设置图片距离阴影大小
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("个人中心");
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
         currentUser=getCurrentUser();
         authorityId=currentUser.getString("authority");
+        Toast.makeText(PersonalActivity.this,authorityId,Toast.LENGTH_SHORT).show();
         //Toast.makeText(PersonalActivity.this,authorityId,Toast.LENGTH_SHORT).show();
-        //Toast.makeText(PersonalActivity.this,authorityId,Toast.LENGTH_SHORT).show();
+        toolbar.setNavigationIcon(R.drawable.back_button);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,7 +225,6 @@ public class PersonalActivity extends AppCompatActivity {
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 File file = new File(Environment.getExternalStorageDirectory().getPath()+"/wood/head/");
                 //是否是文件夹，不是就创建文件夹
                 if (!file.exists()) file.mkdirs();
@@ -247,6 +243,25 @@ public class PersonalActivity extends AppCompatActivity {
                 }
                 //创建一个图片保存的Uri
                 imageUri = Uri.fromFile(imageFile);
+                /*File outputImage=new File(getExternalCacheDir(),"output_image.jpg");
+                try{
+                    if(outputImage.exists()){
+                        outputImage.delete();
+                    }
+                    outputImage.createNewFile();
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+                if(Build.VERSION.SDK_INT>=24)
+                {
+                    imageUri= FileProvider.getUriForFile(PersonalActivity.this,
+                            "com.example.cameraalbumtest.fileprovider",outputImage);
+                }
+                else
+                {
+                    imageUri= Uri.fromFile(outputImage);
+                }*/
 
                 //启动相机程序
                 Intent intent=new Intent("android.media.action.IMAGE_CAPTURE");
@@ -298,7 +313,7 @@ public class PersonalActivity extends AppCompatActivity {
                         }
                     }
                     if(j==AdministratorId.length)
-                    Toast.makeText(PersonalActivity.this, "管理员ID有误,请重新输入", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PersonalActivity.this, "管理员ID有误,请重新输入", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -353,9 +368,6 @@ public class PersonalActivity extends AppCompatActivity {
                     {
                         //将拍摄的照片显示出来
                         Bitmap bitmap= BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-                        circleImage.setImageBitmap(bitmap);
-                        personList.get(0).setImageUri(imageUri);
-                        personAdapter.notifyDataSetChanged();
                         String imgPath = getFileAbsolutePath(PersonalActivity.this,imageUri);
                         try {
                             if(currentUser.getString("ImageId")==null)
@@ -390,7 +402,9 @@ public class PersonalActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
+                        circleImage.setImageBitmap(bitmap);
+                        personList.get(0).setImageUri(imageUri);
+                        personAdapter.notifyDataSetChanged();
                     }
                     catch (FileNotFoundException e)
                     {
@@ -412,7 +426,6 @@ public class PersonalActivity extends AppCompatActivity {
                 break;
             default:
                 break;
-
         }}
 
     @TargetApi(19)
@@ -469,7 +482,7 @@ public class PersonalActivity extends AppCompatActivity {
                 path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             }
             cursor.close();
-         }
+        }
         return path;
     }
 
@@ -485,12 +498,9 @@ public class PersonalActivity extends AppCompatActivity {
             String imageName;
             imageName=getPicNameFromPath(imagePath);
             //Toast.makeText(this,"imageName is "+imageName,Toast.LENGTH_LONG).show();
+            try {
                 if(currentUser.getString("ImageId")==null)
-                    try {
-                        file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
-                    } catch(FileNotFoundException e){
-                        e.printStackTrace();
-                    }
+                    file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
                 else
                 {
                     AVQuery<AVObject> query = new AVQuery<>("_File");
@@ -501,27 +511,26 @@ public class PersonalActivity extends AppCompatActivity {
 
                         }
                     });
-                    try{
-                        file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
-                    }catch (FileNotFoundException e){
-                        e.printStackTrace();
-                    }
-                }
-
-
-
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-                        currentUser.put("ImageId",file.getObjectId());
-                        currentUser.saveInBackground();
-                    Toast.makeText(PersonalActivity.this, "上传成功",Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(PersonalActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
+                    file = AVFile.withAbsoluteLocalPath(imageName,imagePath);
                 }
             }
-        });
+            catch(FileNotFoundException e){
+                e.printStackTrace();
+
+            }
+
+            file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        currentUser.put("ImageId",file.getObjectId());
+                        currentUser.saveInBackground();
+                        Toast.makeText(PersonalActivity.this, "上传成功",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PersonalActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
 
         else

@@ -6,8 +6,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
-public class forgetPswActivity extends AppCompatActivity {
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.RequestPasswordResetCallback;
+
+public class forgetPswActivity extends AppCompatActivity implements View.OnClickListener{
+
+
+    private Button resetPwd;
+    private EditText mailAdress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +31,9 @@ public class forgetPswActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        resetPwd = (Button)findViewById(R.id.resetPwd);
+        mailAdress = (EditText)findViewById(R.id.mail_adress);
+        resetPwd.setOnClickListener(this);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -34,5 +48,24 @@ public class forgetPswActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.resetPwd:
+                String MailAdress = mailAdress.getText().toString();
+                AVUser.requestPasswordResetInBackground(MailAdress, new RequestPasswordResetCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+
+                        } else {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        }
     }
 }

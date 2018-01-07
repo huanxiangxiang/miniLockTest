@@ -3,4 +3,8 @@
     <dimen name="design_fab_size_normal" tools:ignore="PrivateResource">72dp</dimen>
     <dimen name="design_fab_size_mini" tools:ignore="PrivateResource">40dp</dimen>
     <dimen name="actionBar_Size"> 44dp</dimen>
+    <dimen name="standard_padding">8dip</dimen>
+    <dimen name="half_padding">4dip</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 </resources>

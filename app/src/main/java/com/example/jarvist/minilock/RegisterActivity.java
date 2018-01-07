@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case android.R.id.home:
-                Intent intent=new Intent(RegisterActivity.this,launchActivity.class);
+                Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
                 startActivity(intent);
                 RegisterActivity.this.finish();
                 break;
