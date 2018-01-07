@@ -5,6 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -43,8 +49,8 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
+import com.google.zxing.activity.CaptureActivity;
+import com.google.zxing.camera.CameraManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,6 +65,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE =1;
+    private static final int CAMERA_OK = 1;
     private MapView mapView;
     private DrawerLayout mDrawerLayout;
     private NavigationView nav_View;
@@ -68,17 +76,36 @@ public class MainActivity extends AppCompatActivity {
     private TextView email;
     private View nav_headerLayout;
     private CircleImageView headview;
+    private String locateAddress;
+    //光线传感器相关
+    private SensorManager sm;
+    private Sensor ligthSensor;
+    private Camera mCamera;
+    //private CameraManager manager;
 
     private String currentUserName ;
     private String currentEmail ;
     private boolean isFirstLocate = true;
+    private boolean isScanCode = false;
+    private boolean isFlashOn = false;
+    private Camera.Parameters params;
     public LocationClient mLocationClient = null;
     public BDAbstractLocationListener myListener = new MyLocationListener();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+        String sExtra = "";
+        if(intent.getExtras()!=null) {
+            sExtra = intent.getStringExtra("result");
+            if (!sExtra.isEmpty() && !sExtra.equals("")) {
+                Toast.makeText(MainActivity.this, sExtra, Toast.LENGTH_SHORT).show();
+            }
+        }
         mapView = (MapView)findViewById(R.id.bmapView);
         mBaiduMap = mapView.getMap();
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
@@ -92,6 +119,35 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBar actionBar = getSupportActionBar();
         fab = (FloatingActionButton)findViewById(R.id.fab);
+        //光线传感器使用注册
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        //manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        ligthSensor = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
+        sm.registerListener(new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                //获取精度
+                float acc = event.accuracy;
+                //获取光线强度
+                float lux = event.values[0];
+                int retval = Float.compare(lux, (float) 10.0);
+                String s = "精度:"+acc+",光线强度:"+lux + String.valueOf(isScanCode)+"   "+String.valueOf(isFlashOn +"   "+String.valueOf(retval));
+                Toast.makeText(MainActivity.this,s,Toast.LENGTH_SHORT).show();
+                if (isScanCode) {
+                    if(!isFlashOn) {
+                        if (retval < 0) {
+                            openLight();
+                            isFlashOn = true;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        }, ligthSensor, SensorManager.SENSOR_DELAY_NORMAL);
         nickName = (TextView)nav_headerLayout.findViewById(R.id.nickname);
         email = (TextView)nav_headerLayout.findViewById(R.id.mail);
         changeHeadView();
@@ -111,10 +167,25 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_logOut:
                         AVUser.logOut();// 清除缓存用户对象
                         AVUser currentUser = AVUser.getCurrentUser();
-                        Intent intent = new Intent(MainActivity.this,launchActivity.class);
+                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                         startActivity(intent);
                         MainActivity.this.finish();
                         break;// 现在的 currentUser 是 null 了
+                    case R.id.nav_suggestion:
+                        Intent start_advice = new Intent(MainActivity.this, RepairActivity.class);
+                        start_advice.putExtra("address",locateAddress);
+                        startActivity(start_advice);
+                        MainActivity.this.finish();
+                        break;
+                    case R.id.nav_share:
+                        Intent start_share = new Intent(MainActivity.this, ShareActivity.class);
+                        startActivity(start_share);
+                        MainActivity.this.finish();
+                        break;
+                    case R.id.nav_record:
+                        Intent start_record = new Intent(MainActivity.this, RecordActivity.class);
+                        startActivity(start_record);
+                        MainActivity.this.finish();
                     default:
                         mDrawerLayout.closeDrawers();
                         break;
@@ -125,13 +196,32 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Build.VERSION.SDK_INT>22){
+                    if (ContextCompat.checkSelfPermission(MainActivity.this,
+                            android.Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+                        //先判断有没有权限 ，没有就在这里进行权限的申请
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{android.Manifest.permission.CAMERA},CAMERA_OK);
+
+                    }else {
+                        //说明已经获取到摄像头权限了 想干嘛干嘛
+                    }
+                }else {
+//这个说明系统版本在6.0之下，不需要动态获取权限。
+
+                }
+                isScanCode = true;
                 Toast.makeText(MainActivity.this,"fab clicked",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                /*
                 IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
                 integrator.setOrientationLocked(false)//设置扫码的方向
                         .setPrompt("将条码放置于框内")//设置下方提示文字
                         .setCameraId(0)//前置或后置摄像头
                         .setBeepEnabled(false)//扫码提示音，默认开启
                         .initiateScan();
+                        */
 
 
             }
@@ -182,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
         if(isFirstLocate){
             isFirstLocate = false;
             Toast.makeText(MainActivity.this,"定位到 "+ location.getAddrStr(),Toast.LENGTH_SHORT).show();
+            locateAddress = location.getAddrStr();
             LatLng ll = new LatLng(location.getLatitude(),location.getLongitude());
             MapStatusUpdate update = MapStatusUpdateFactory.newLatLngZoom(ll,18f);
             mBaiduMap.animateMapStatus(update);
@@ -197,7 +288,9 @@ public class MainActivity extends AppCompatActivity {
         mLocationClient.start();
     }
 
-    private void initLocation(){
+
+
+        private void initLocation(){
         LocationClientOption option = new LocationClientOption();
         option.setScanSpan(5000);
         option.setOpenGps(true);
@@ -288,9 +381,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        //IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        /*
         if (result != null) {
-           /* private void sendRequest{
+             private void sendRequest{
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -298,8 +393,7 @@ public class MainActivity extends AppCompatActivity {
                         Request request = new Request.Builder().url()
                     }
                 })
-            }*/
-
+            }
 
 
             Intent intent = new Intent (MainActivity.this,showActivity.class);
@@ -308,7 +402,15 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }*/
+        if (resultCode == RESULT_OK) { //RESULT_OK = -1
+            Bundle bundle = data.getExtras();
+            String scanResult = bundle.getString("result");
+            Toast.makeText(MainActivity.this, scanResult, Toast.LENGTH_LONG).show();
         }
+        isScanCode = false;
+        isFlashOn = false;
+        closeLight();
     }
 
     public void changeHeadView()
@@ -363,4 +465,67 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+/*
+    private void lightSwitch(boolean lightStatus) {
+        if (lightStatus) { // 关闭手电筒
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {
+                    manager.setTorchMode("0", false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                if (mCamera != null) {
+                    mCamera.stopPreview();
+                    mCamera.release();
+                    mCamera = null;
+                }
+            }
+        } else { // 打开手电筒
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {
+                    manager.setTorchMode("0", true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                final PackageManager pm = getPackageManager();
+                final FeatureInfo[] features = pm.getSystemAvailableFeatures();
+                for (final FeatureInfo f : features) {
+                    if (PackageManager.FEATURE_CAMERA_FLASH.equals(f.name)) { // 判断设备是否支持闪光灯
+                        if (null == mCamera) {
+                            mCamera = Camera.open();
+                        }
+                        final Camera.Parameters parameters = mCamera.getParameters();
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        mCamera.setParameters(parameters);
+                        mCamera.startPreview();
+                    }
+                }
+            }
+        }
+    }*/
+
+
+    private void openLight() //开闪光灯
+    {
+        mCamera = CameraManager.getCamera();
+        params = mCamera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        mCamera.setParameters(params);
+        mCamera.startPreview();
+    }
+
+    private void closeLight() //关闪光灯
+    {
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        mCamera.setParameters(params);
+    }
+
+
 }
+
+
+
+
+

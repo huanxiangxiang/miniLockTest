@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.jarvist.minilock.ShareActivity"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_layout">
+
+    </include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/shareWXFriend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/weixin"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/shareWXScene"
+            android:layout_marginStart="180dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="90dp"
+            android:src="@drawable/friendscene" />
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="微信好友"
+            android:layout_alignLeft="@id/shareWXFriend"
+            android:layout_below="@+id/shareWXFriend"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="朋友圈"
+            android:textSize="12sp"
+            android:layout_below="@id/shareWXScene"
+            android:layout_alignLeft="@id/shareWXScene"/>
+
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>
