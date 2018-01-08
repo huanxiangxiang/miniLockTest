@@ -28,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jarvist.minilock.MainActivity;
+import com.example.jarvist.minilock.Activity.MainActivity;
 import com.example.jarvist.minilock.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -308,6 +308,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback ,View
             resultIntent.putExtras(bundle);
             this.setResult(RESULT_CODE_QR_SCAN, resultIntent);
         }
+        closeLight();
         CaptureActivity.this.finish();
     }
 
@@ -446,6 +447,8 @@ public class CaptureActivity extends AppCompatActivity implements Callback ,View
 
     private void closeLight() //关闪光灯
     {
+        mCamera = CameraManager.getCamera();
+        params = mCamera.getParameters();
         params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         mCamera.setParameters(params);
     }
