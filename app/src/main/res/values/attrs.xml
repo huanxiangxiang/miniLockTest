@@ -9,6 +9,7 @@
         label_text  框上方提示
     -->
     <declare-styleable name="ViewfinderView">
+        <attr name="mainBackground" format="color|reference" />
         <attr name="corner_color" format="color"/>
         <attr name="laser_color" format="color"/>
         <attr name="frame_color" format="color" />

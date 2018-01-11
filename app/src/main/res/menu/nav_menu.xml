@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="none"
-           android:id="@+id/group_function">
+
         <item
             android:id="@+id/nav_account"
-            android:icon="@drawable/account"
+            android:icon="@drawable/personal_center"
             android:title="个人中心"/>
         <item
             android:id="@+id/nav_locked"
-            android:icon="@drawable/chatting"
+            android:icon="@drawable/lock"
             android:title="上锁"/>
         <item
             android:id="@+id/nav_notification"
-            android:icon="@drawable/magnify"
+            android:icon="@drawable/search"
             android:title="搜索"/>
-    </group>
-    <group
-        android:checkableBehavior="none"
-        android:id="@+id/group_settings">
+
         <item android:id="@+id/nav_share"
             android:icon="@drawable/share"
             android:title="分享"/>
         <item android:id="@+id/nav_night"
+            android:icon="@drawable/night1"
             android:title="夜间模式"/>
-        <item android:id="@+id/nav_record"
-            android:icon="@drawable/record"
-            android:title="开锁记录"/>
+        <!--<item android:id="@+id/nav_record"-->
+            <!--android:icon="@drawable/form"-->
+            <!--android:title="开锁记录"/>-->
         <item android:id="@+id/nav_suggestion"
-            android:icon="@drawable/repair"
+            android:icon="@drawable/repair1"
             android:title="故障报修"/>
         <item android:id="@+id/nav_feedback"
-            android:icon="@drawable/feedback"
+            android:icon="@drawable/survey"
             android:title="意见反馈"/>
         <item android:id="@+id/nav_about"
-            android:icon="@drawable/aboutus"
+            android:icon="@drawable/about"
             android:title="关于"/>
         <item android:id="@+id/nav_logOut"
-            android:icon="@drawable/logout"
+            android:icon="@drawable/out"
             android:title="切换账号"/>
-    </group>
+
 </menu>

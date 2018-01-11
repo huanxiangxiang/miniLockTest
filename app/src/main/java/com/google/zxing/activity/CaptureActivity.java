@@ -79,7 +79,6 @@ public class CaptureActivity extends AppCompatActivity implements Callback ,View
     public static final int RESULT_CODE_QR_SCAN = 0xA1;
     public static final String INTENT_EXTRA_KEY_QR_SCAN = "qr_scan_result";
 
-    private ImageView open_album;
     private ImageView flash_light;
     private ImageView flash_light_on;
     private TextView lightText;
@@ -94,7 +93,6 @@ public class CaptureActivity extends AppCompatActivity implements Callback ,View
         //ViewUtil.addTopView(getApplicationContext(), this, R.string.scan_card);
         CameraManager.init(getApplication());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_content);
-        open_album = (ImageView)findViewById(R.id.open_scanner_album);
         flash_light = (ImageView)findViewById(R.id.shoudian);
         flash_light_on = (ImageView)findViewById(R.id.shoudianon);
         lightText = (TextView)findViewById(R.id.light_text);
@@ -111,7 +109,6 @@ public class CaptureActivity extends AppCompatActivity implements Callback ,View
 //		cancelScanButton = (Button) this.findViewById(R.id.btn_cancel_scan);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
-        open_album.setOnClickListener(this);
         flash_light_on.setOnClickListener(this);
         flash_light.setOnClickListener(this);
 
@@ -416,9 +413,6 @@ public class CaptureActivity extends AppCompatActivity implements Callback ,View
     public void onClick(View view) {
         switch (view.getId())
         {
-            case R.id.open_scanner_album:
-
-                break;
             case R.id.shoudian:
                 openLight();
                 flash_light_on.setVisibility(View.VISIBLE);

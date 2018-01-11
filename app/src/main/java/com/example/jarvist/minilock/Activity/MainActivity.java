@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -73,7 +74,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements FloatingActionButton.OnClickListener {
+public class MainActivity extends AppCompatActivity implements FloatingActionButton.OnClickListener  {
 
     public static final String SITE_URL = "http://api.heclouds.com/devices/";
 
@@ -109,13 +110,27 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     private Camera.Parameters params;
 
 
+    private int theme;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
+        if(savedInstanceState != null){
+            theme = savedInstanceState.getInt("theme");
+            setTheme(theme);
+        }
+
+
+
+
         SDKInitializer.initialize(getApplicationContext());
         AVUser currentUser = AVUser.getCurrentUser();
-        setContentView(R.layout.activity_main);
+    setContentView(R.layout.activity_main);
         if (currentUser == null) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -189,11 +204,18 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+            actionBar.setHomeAsUpIndicator(R.drawable.memu1);
         }
         mapView = (MapView) findViewById(R.id.bmapView);
         nav_View = (NavigationView) findViewById(R.id.nav_view);
+
+
+
+
         nav_headerLayout = nav_View.inflateHeaderView(R.layout.nav_header);
+
+
+
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -206,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
 
 
         nav_View.setCheckedItem(R.id.nav_locked);
+
         nav_View.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -214,6 +237,17 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                         Intent start_account = new Intent(MainActivity.this, PersonalActivity.class);
                         startActivity(start_account);
                         break;
+
+
+                    case R.id.nav_night:
+
+                        theme = (theme == R.style.AppTheme) ? R.style.NightAppTheme : R.style.AppTheme;
+                        MainActivity.this.recreate();
+                        break;
+
+
+
+
                     case R.id.nav_locked:
                         try {
                             Toast.makeText(MainActivity.this, "申请上锁成功，请稍候......", Toast.LENGTH_SHORT).show();
@@ -230,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                         //AVUser currentUser = AVUser.getCurrentUser();
                         Intent intent2 = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent2);
-                        //MainActivity.this.finish();
+                        MainActivity.this.finish();
                         break;// 现在的 currentUser 是 null 了
                     case R.id.nav_feedback:
                         FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
@@ -247,9 +281,9 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
                         startActivity(start_share);
                         //MainActivity.this.finish();
                         break;
-                    case R.id.nav_record:
-                        Intent start_record = new Intent(MainActivity.this, RecordActivity.class);
-                        startActivity(start_record);
+                    case R.id.nav_about:
+                        Intent aboutIntent = new Intent(MainActivity.this, aboutActivity.class);
+                        startActivity(aboutIntent);
                         //MainActivity.this.finish();
                     default:
                         mDrawerLayout.closeDrawers();
@@ -539,7 +573,30 @@ public class MainActivity extends AppCompatActivity implements FloatingActionBut
     }
 
 
-}
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("theme", theme);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        theme = savedInstanceState.getInt("theme");
+    }
+
+
+
+
+
+    }
+
+
+
+
+
 
 
 

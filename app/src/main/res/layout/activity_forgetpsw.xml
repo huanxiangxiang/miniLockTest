@@ -6,36 +6,50 @@
     <include layout="@layout/toolbar_layout"/>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="50dp"
-        android:padding="16dp">
+        android:paddingRight="30dp"
+        android:paddingLeft="35dp"
+        android:paddingTop="80dp"
+        android:paddingBottom="10dp"
+        >
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="2"
+            android:id="@+id/Email2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="账号邮箱："/>
-        <EditText
-
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textSize="14sp"
-            android:id="@+id/mail_adress"
-            android:hint="请输入邮箱"
+            android:textSize="18sp"
+            android:paddingLeft="35dp"
+            android:text="电子邮箱"
             />
-        </LinearLayout>
+        <ImageView
+            android:layout_marginTop="-3.5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/email"
+            android:layout_alignLeft="@+id/Email2"
+      />
+        <EditText
+            android:id="@+id/mail_adress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingTop="30dp"
+            android:layout_below="@+id/Email2"
+            android:gravity="center_vertical"
+            />
+    </RelativeLayout>
 
     <Button
-        android:layout_marginTop="30dp"
-        android:layout_width="wrap_content"
+        android:id="@+id/resetPwd"
+        android:layout_width="188dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="30dp"
         android:background="@drawable/button_shape"
-        android:id="@+id/resetPwd"
-        android:text="重置密码"/>
+        android:text="重置密码"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp" />
 
 
 </LinearLayout>

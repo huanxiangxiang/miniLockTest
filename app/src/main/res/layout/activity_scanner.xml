@@ -25,7 +25,7 @@
             app:corner_color="@color/corner_color"
             app:frame_color="@color/viewfinder_frame"
             app:label_text="对准锁上二维码即可完成扫描"
-            app:label_text_color="@color/colorAccent"
+            app:label_text_color="@color/colorPrimary"
             app:label_text_size="50"
             app:laser_color="@color/laser_color"
             app:mask_color="@color/viewfinder_mask"
@@ -35,58 +35,37 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:layout_gravity="bottom">
 
-            <ImageView
-                android:id="@+id/open_scanner_album"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="78dp"
-                android:layout_toLeftOf="@+id/light_text"
-                android:src="@drawable/album" />
 
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginRight="80dp"
                 android:layout_marginBottom="80dp"
                 android:src="@drawable/shoudian"
-                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
                 android:id="@+id/shoudian" />
 
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginRight="80dp"
                 android:layout_marginBottom="80dp"
+                android:layout_centerHorizontal="true"
                 android:src="@drawable/shoudianlignt"
-                android:layout_alignParentRight="true"
                 android:id="@+id/shoudianon"
                 android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/text_album"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/open_scanner_album"
-                android:layout_alignLeft="@+id/open_scanner_album"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="15dp"
-                android:textSize="16sp"
-                android:text="相册"/>
 
 
             <TextView
                 android:id="@+id/light_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/text_album"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="93dp"
-                android:layout_marginTop="10dp"
-                android:textSize="16sp"
-                android:text="开灯"/>
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="开灯"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
         </RelativeLayout>
 
     </FrameLayout>

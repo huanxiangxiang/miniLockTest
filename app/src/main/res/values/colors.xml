@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#60db68</color>
-    <color name="colorPrimaryDark">#555555</color>
+    <color name="colorPrimary">#fafafa</color>
+    <color name="colorPrimaryDark">#fafafa</color>
     <color name="colorAccent">#FF4081</color>
     <color name="infoWindowBG">#c2ffffff</color>
     <color name="infoWindowTitle">#191919</color>
@@ -17,10 +17,28 @@
     <color name="status_text">#ffffffff</color>
     <color name="transparent">#00000000</color>
     <color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
-    <color name="viewfinder_mask">#60000000</color>
+    <color name="viewfinder_mask">#77000000</color>
     <!-- QRCode scanner color begin -->
     <color name="viewfinder_frame">#90FFFFFF</color>
     <color name="result_point_color">#C0FFFF00</color>
-    <color name="laser_color">#0F0</color>
-    <color name="corner_color">#00FF00</color>
+    <color name="laser_color">#e95b5b</color>
+    <color name="corner_color">#000000</color>
+    <color name="night_background_color">#767171</color>
+
+
+
+
+    <color name="nightColorPrimary">#3b3b3b</color>
+    <color name="nightColorPrimaryDark">#383838</color>
+    <color name="nightColorAccent">#a72b55</color>
+
+
+    <color name="textColor">#3b3b3b</color>
+    <color name="textColor_night">#FFFFFF</color>
+    <color name="backgroundColor">#FFFFFF</color>
+    <color name="backgroundColor_night">#3b3b3b</color>
+
+
+
+
 </resources>

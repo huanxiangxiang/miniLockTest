@@ -4,10 +4,30 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/laser_color</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="mainBackground">@color/backgroundColor</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
+
+    <style name="NightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/nightColorPrimary</item>
+        <item name="colorPrimaryDark">@color/nightColorPrimaryDark</item>
+        <item name="colorAccent">@color/nightColorAccent</item>
+        <item name="android:textColor">@color/textColor_night</item>
+        <item name="mainBackground">@color/night_background_color</item>
+        <item name="android:itemBackground">@android:color/black</item>
+        <item name="itemTextColor">@android:color/white</item>
+        <item name="itemBackground">@color/night_background_color</item>
+        <item name="android:listDivider">@color/textColor_night</item>
+    </style>
+
+
+
+
+
 
     <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
@@ -27,9 +47,7 @@
     </style>
 
 
-    <style name="Theme" parent="android:Theme">
 
-    </style>
 
     <style name="noAnimation">
         <item name="android:activityOpenEnterAnimation">@null</item>
@@ -56,6 +74,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
 
 
 

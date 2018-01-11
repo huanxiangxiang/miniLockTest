@@ -45,6 +45,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
         if(actionBar != null){
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back1);
         }
         shareWxFriend = (ImageView)findViewById(R.id.shareWXFriend);
         shareWxScene = (ImageView)findViewById(R.id.shareWXScene);

@@ -37,7 +37,7 @@
     <application
         android:name=".Application.miniLockApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/minilock"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -100,7 +100,7 @@
         <activity
             android:name="com.google.zxing.activity.CaptureActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity android:name=".Activity.RecordActivity"/>
+        <activity android:name=".Activity.aboutActivity"/>
     </application>
 
 </manifest>

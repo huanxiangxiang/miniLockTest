@@ -6,94 +6,112 @@
     <include layout="@layout/toolbar_layout">
 
     </include>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="50dp">
+        android:paddingRight="30dp"
+        android:paddingLeft="40dp"
+        android:paddingTop="60dp"
+        android:paddingBottom="10dp"
+        >
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/Email1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="邮箱"/>
+            android:textSize="18sp"
+            android:paddingLeft="35dp"
+            android:text="电子邮箱"
+            />
+        <ImageView
+            android:layout_marginTop="-3.5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/email"
+            android:layout_alignLeft="@+id/Email1"
+            />
         <EditText
             android:id="@+id/mail"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:layout_weight="5"
-            android:hint="请设置邮箱"
+            android:paddingTop="20dp"
+            android:hint="请输入电子邮箱"
+            android:layout_below="@+id/Email1"
+            android:gravity="center_vertical"
             />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp">
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/username"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="账号"/>
+            android:textSize="18dp"
+            android:paddingLeft="35dp"
+            android:paddingTop="10dp"
+            android:text="用户名"
+            android:layout_below="@+id/mail"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/login_account"
+            android:layout_below="@+id/mail"/>
         <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/editnum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:hint="请输入账号"
+            android:paddingTop="20dp"
             android:textSize="14sp"
-            android:hint="请输入用户名"
-            />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp">
+            android:layout_below="@+id/username"/>
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/textpsd"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="密码"/>
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textSize="14sp"
-            android:inputType="textPassword"
-            android:hint="请设置登录密码，不少于6位数"
+            android:text="密码"
+            android:textSize="18dp"
+            android:paddingLeft="35dp"
+            android:paddingTop="10dp"
+            android:layout_below="@+id/editnum"
             />
 
-
-    </LinearLayout>
-
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/editnum"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/login_password" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/password"
+            android:paddingTop="20dp"
+            android:textSize="14sp"
+            android:layout_below="@+id/textpsd"
+            android:hint="请设置登录密码，不少于6位数"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/registerEnsure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/button_shape"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
-        android:layout_marginStart="60dp"
+        android:layout_width="123dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginEnd="60dp"
-        android:text="注册"/>
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/button_shape"
+        android:paddingTop="7dp"
+        android:text="注册"
+        android:textColor="#ffffff"
+        android:textSize="22sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_gravity="center"
+        android:textSize="12dp"
         android:id="@+id/sendMailTextView"
-        android:textColor="#6475e1"
-        android:text="没有收到邮件？点击重新发送邮件。"/>
+        android:textColor="#000000"
+        android:text="没有收到邮件？点击重新发送邮件"/>
 
 
 </LinearLayout>

@@ -78,6 +78,7 @@ public class RepairActivity extends AppCompatActivity implements View.OnClickLis
         if(actionBar != null){
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back1);
         }
         Intent intent = getIntent();
         String address = intent.getExtras().getString("address");

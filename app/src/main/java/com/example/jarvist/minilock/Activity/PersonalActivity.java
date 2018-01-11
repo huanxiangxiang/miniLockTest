@@ -26,6 +26,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -97,6 +98,7 @@ public class PersonalActivity extends AppCompatActivity {
         ActionBar actionBar=getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back1);
         }
         currentUser=getCurrentUser();
         authorityId=currentUser.getString("authority");
@@ -362,6 +364,19 @@ public class PersonalActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                Intent intent = new Intent(PersonalActivity.this, MainActivity.class);
+                startActivity(intent);
+                PersonalActivity.this.finish();
+                break;
+        }
+        return true;
     }
 
 

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -31,6 +32,7 @@ public class forgetPswActivity extends AppCompatActivity implements View.OnClick
         ActionBar actionBar=getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back1);
         }
         resetPwd = (Button)findViewById(R.id.resetPwd);
         mailAdress = (EditText)findViewById(R.id.mail_adress);
@@ -61,9 +63,11 @@ public class forgetPswActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void done(AVException e) {
                         if (e == null) {
+                            Toast.makeText(getApplicationContext(),"已向您邮箱发送信息",Toast.LENGTH_SHORT).show();
 
                         } else {
                             e.printStackTrace();
+                            Toast.makeText(getApplicationContext(),"不存在该邮箱",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

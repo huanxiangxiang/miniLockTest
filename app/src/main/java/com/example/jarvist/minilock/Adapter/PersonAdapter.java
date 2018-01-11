@@ -51,6 +51,7 @@ public class PersonAdapter extends ArrayAdapter<Person> {
                 catch (FileNotFoundException e)
                 {
                     e.printStackTrace();
+
                 }
             }
             else if(!person.getImagePath().equals(""))

@@ -1,11 +1,15 @@
 package com.example.jarvist.minilock.Activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -39,13 +43,13 @@ public class RegisterActivity extends AppCompatActivity {
         ActionBar actionBar=getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back1);
         }
         numberText = (EditText)findViewById(R.id.editnum);
         mailText = (EditText)findViewById(R.id.mail) ;
         passwordText = (EditText)findViewById(R.id.password);
         registerEnsure = (Button)findViewById(R.id.registerEnsure);
         sendMail = (TextView)findViewById(R.id.sendMailTextView) ;
-        sendMail.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         registerEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +97,9 @@ public class RegisterActivity extends AppCompatActivity {
                 });
             }
         });
+        SpannableStringBuilder style =new SpannableStringBuilder("没有收到邮件？点击重新发送邮件");
+        style.setSpan(new ForegroundColorSpan(Color.rgb(22,202,255)),7,15,Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        sendMail.setText(style);
     }
 
     @Override

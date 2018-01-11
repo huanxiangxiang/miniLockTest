@@ -1,11 +1,16 @@
 package com.example.jarvist.minilock.Activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ListView userListview;
     private UserAdapter userAdapter;
     private UserSQLHelper sqlHelper;
+    private TextView loginlast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +90,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn.setOnClickListener(this);
         forgetBtn.setOnClickListener(this);
         registBtn.setOnClickListener(this);
+        loginlast=(TextView)findViewById(R.id.loginLast);
+        SpannableStringBuilder style =new SpannableStringBuilder("登录即代表阅读并同意服务条款");
+        style.setSpan(new ForegroundColorSpan(Color.rgb(22,202,255)),10,14,Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        loginlast.setText(style);
     }
 
 
